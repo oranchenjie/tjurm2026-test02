@@ -1,6 +1,6 @@
 #include "impls.h"
 #include <unordered_map>
-
+using namespace cv;
 
 std::unordered_map<int, cv::Rect> roi_color(const cv::Mat& input) {
     /**
@@ -29,7 +29,33 @@ std::unordered_map<int, cv::Rect> roi_color(const cv::Mat& input) {
      *      4. 将颜色 和 矩形位置 存入 map 中
      */
     std::unordered_map<int, cv::Rect> res;
+    std::vector<std::vector<Point>> cvv;
     // IMPLEMENT YOUR CODE HERE
-
+    std::vector<Vec4i> figuren;
+    Mat gray,bin;
+    cvtColor(input,gray,COLOR_BGR2GRAY);
+    threshold(gray,bin,0, 255, THRESH_BINARY_INV|THRESH_OTSU);
+    findContours(bin,cvv,figuren,RETR_LIST,CHAIN_APPROX_SIMPLE);
+    for (int i = 0;i<cvv.size(); ++i) {
+        if (!cvv[i].empty()) {
+            Rect rect = boundingRect(cvv[i]);
+            Mat roi = input(rect);
+            Scalar meancolor = mean(roi);
+            int colorindex = 0;
+            double maxn = meancolor[0];
+            if (meancolor[1] > maxn) { 
+                maxn=meancolor[1];
+                colorindex = 1;
+            }
+            if (meancolor[2] > maxn) { 
+                maxn=meancolor[2];
+                colorindex=2;
+            }
+            res[colorindex]=rect;
+        }
+        else{
+            continue;
+        }
+    }
     return res;
 }

@@ -17,5 +17,14 @@ float compute_iou(const cv::Rect& a, const cv::Rect& b) {
      * 运行测试点，显示通过就行，不通过会告诉你哪一组矩形错了。
     */
     // IMPLEMENT YOUR CODE HERE
-    return 0.f;
+    cv::Rect intersection=a&b;
+    cv::Rect unionn=a|b;
+    float s_intersection=static_cast<float>(intersection.area());
+    float s_unionn=static_cast<float>(a.area())+static_cast<float>(b.area())-s_intersection;
+    if(s_unionn<=0){
+        std::cout<<"error:并集面积不能为0.";
+        return 0.0f;
+    }
+    float iou=s_intersection*1.0/s_unionn;
+    return iou;
 }

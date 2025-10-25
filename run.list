@@ -1,12 +1,12 @@
-resize
 
-stop
 
-erode
-find_contours
-rect
-split
 threshold
-compute_iou
-compute_area_ratio
+stop
+find_contours
 roi_color
+split
+compute_iou
+rect
+resize
+compute_area_ratio
+erode

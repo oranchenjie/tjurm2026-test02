@@ -15,9 +15,25 @@ std::vector<cv::Mat> split(const cv::Mat& rgb_image) {
      * GOAL:
      *  1. 此任务会自动判断你的代码是否正确，通过测试 (打印出 pass ) 即可
      */
-    std::vector<cv::Mat> result;
+    std::vector<cv::Mat> result(3);
 
     // TODO: 实现代码
-
+     if (rgb_image.empty()) {
+        return result;
+    }
+    result[0] = cv::Mat::zeros(rgb_image.rows,rgb_image.cols,CV_8UC1); 
+    result[1] = cv::Mat::zeros(rgb_image.rows,rgb_image.cols, CV_8UC1); 
+    result[2] = cv::Mat::zeros(rgb_image.rows,rgb_image.cols, CV_8UC1);
+    for (int i= 0; i<rgb_image.rows;  ++i) {
+        const cv::Vec3b* ptr_rgb = rgb_image.ptr<cv::Vec3b>(i); 
+        uchar* ptr_b = result[0].ptr<uchar>(i);
+        uchar* ptr_g = result[1].ptr<uchar>(i);
+        uchar* ptr_r = result[2].ptr<uchar>(i);
+        for (int j= 0; j<rgb_image.cols;  ++j) {
+            ptr_b[j] = ptr_rgb[j][0]; 
+            ptr_g[j] = ptr_rgb[j][1]; 
+            ptr_r[j] = ptr_rgb[j][2]; 
+        }
+    }
     return result;
 }

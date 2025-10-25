@@ -1,4 +1,5 @@
 #include "impls.h"
+#include <opencv2/opencv.hpp> 
 
 
 float compute_area_ratio(const std::vector<cv::Point>& contour) {
@@ -13,5 +14,11 @@ float compute_area_ratio(const std::vector<cv::Point>& contour) {
      * 通过条件:
      * 运行测试点，通过即可。
      */
-    return 0.f;
+    double contourArea = cv::contourArea(contour);
+    if (contourArea <= 0) return 0.f;
+    cv::RotatedRect minRect = cv::minAreaRect(contour);
+    float rectArea = minRect.size.width  * minRect.size.height; 
+    if (rectArea <= std::numeric_limits<float>::epsilon()) 
+        return 0.f;
+    return static_cast<float>(contourArea / rectArea);
 }

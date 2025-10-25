@@ -1,6 +1,7 @@
 #include "impls.h"
+#include <opencv2/opencv.hpp> 
 
-
+using namespace cv;
 std::vector<cv::Mat> erode(const cv::Mat& src_erode, const cv::Mat& src_dilate) {
     /**
      * TODO: 先将图像转换为灰度图像, 然后二值化，然后进行腐蚀操作，具体内容：
@@ -43,9 +44,14 @@ std::vector<cv::Mat> erode(const cv::Mat& src_erode, const cv::Mat& src_dilate) 
      *     2. dilate 之后的图像中，图中的小脚被消除了(类似答案中的样子)
      *     以上两个检查点需要自己检查，满足条件 则输入 p 通过, 否则输入 f 表示不通过
      */
+       // TODO: 在这里实现你的代码
     cv::Mat dst_erode, dst_dilate;
-
-    // TODO: 在这里实现你的代码
-
+    cv::cvtColor(src_erode,dst_erode,cv::COLOR_BGR2GRAY);
+    cv::cvtColor(src_dilate,dst_dilate,cv::COLOR_BGR2GRAY);
+    threshold(dst_erode,dst_erode,50, 255, THRESH_BINARY);
+    threshold(dst_dilate,dst_dilate,50, 255, THRESH_BINARY);
+    cv::Mat core=cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3,3),Point(-1,-1));
+    cv::erode(dst_erode,dst_erode,core,Point(-1,-1),5,BORDER_CONSTANT);
+    cv::dilate(dst_dilate,dst_dilate,core,Point(-1,-1),5,BORDER_CONSTANT);
     return {dst_erode, dst_dilate};
 }

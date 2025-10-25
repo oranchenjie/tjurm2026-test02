@@ -1,5 +1,6 @@
 #include "impls.h"
-
+#include <opencv2/opencv.hpp>
+using namespace cv;
 
 std::vector<std::vector<cv::Point>> find_contours(const cv::Mat& input) {
     /**
@@ -17,7 +18,17 @@ std::vector<std::vector<cv::Point>> find_contours(const cv::Mat& input) {
      * 运行测试点，你找到的轮廓与答案的轮廓一样就行。
      */
     
-    std::vector<std::vector<cv::Point>> res;
+    std::vector<std::vector<cv::Point>> res,cvt;
     // IMPLEMENT YOUR CODE HERE
+    std::vector<Vec4i> figuren;
+    Mat gray,bin;
+    cvtColor(input,gray,COLOR_BGR2GRAY);
+    threshold(gray,bin,0, 255, THRESH_BINARY|THRESH_OTSU);
+    findContours(bin,cvt,figuren,RETR_TREE,CHAIN_APPROX_SIMPLE);
+    for(int i=0;i<cvt.size();i++){
+        if(figuren[i][2]==-1){
+            res.push_back(cvt[i]);
+        }
+    }
     return res;
 }
